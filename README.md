@@ -23,3 +23,17 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
   5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 Good luck!
+
+# Explicación del proceso
+
+  1. Descargamos el archivo getdata_projectfiles_UCI HAR Dataset.zip de la dirección https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
+ 
+  2. Descomprimimos este archivo y obtendremos otros cuatro archivos y dos carpetas que colocaremos en nuestro working directory.
+
+  3. Cargamos en memoria el paquete "data.table" con library(data.table). Los data frames que vamos creando los transformaremos en data tables. Se gana en velocidad de cómputo y en presentación.
+
+  4. Leemos los archivos "subject_train.txt" y "subject_test.txt" relacionados con "subject" y que tienen el mismo número de columnas. Juntamos sus filas con rbind() y tendremos los datos en el data table "dtSubject". Leemos también los archivos "Y_train.txt" y "Y_test.txt" relacionados con las actividades y juntaremos sus filas en el data table "dtActivity". Análogamente con los archivos "X_train.txt" y "X_test.txt" de datos cuyas filas uniremos en el data table "dt".
+
+  5. Ponemos nombres adecuados a las columnas de estos tres data tables: a la única columna del data table dtSubject le llamaremos "subject". A la única columna del data table dtActivity  le llamamos "activityNum". Dejamos los nombres Dejamos los nombres de las variables "V1",..., "V561" en el data table dt.
+
+  6. Mezclamos ahora las columnas de los tres data table anteriores con dt <- cbind(dtSubject, dtActivity,dt) con lo que tendremos un único data table dt. Para ordenarlo pondremos la llave setkey(dt, subject, activityNum). Con esto acabamos la primera parte del proyecto.
