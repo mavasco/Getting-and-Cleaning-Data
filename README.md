@@ -24,6 +24,7 @@ https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Datas
 
 Good luck!
 
+
 # Explicación del proceso
 
   1. Descargamos el archivo getdata_projectfiles_UCI HAR Dataset.zip de la dirección https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip 
@@ -34,6 +35,18 @@ Good luck!
 
   4. Leemos los archivos "subject_train.txt" y "subject_test.txt" relacionados con "subject" y que tienen el mismo número de columnas. Juntamos sus filas con rbind() y tendremos los datos en el data table "dtSubject". Leemos también los archivos "Y_train.txt" y "Y_test.txt" relacionados con las actividades y juntaremos sus filas en el data table "dtActivity". Análogamente con los archivos "X_train.txt" y "X_test.txt" de datos cuyas filas uniremos en el data table "dt".
 
-  5. Ponemos nombres adecuados a las columnas de estos tres data tables: a la única columna del data table dtSubject le llamaremos "subject". A la única columna del data table dtActivity  le llamamos "activityNum". Dejamos los nombres Dejamos los nombres de las variables "V1",..., "V561" en el data table dt.
+  5. Ponemos nombres adecuados a las columnas de estos tres data tables: a la única columna del data table dtSubject le llamaremos "subject". A la única columna del data table dtActivity  le llamamos "activityNum". Dejamos los nombres de las variables "V1",..., "V561" en el data table dt.
 
   6. Mezclamos ahora las columnas de los tres data table anteriores con dt <- cbind(dtSubject, dtActivity,dt) con lo que tendremos un único data table dt. Para ordenarlo pondremos la llave setkey(dt, subject, activityNum). Con esto acabamos la primera parte del proyecto.
+
+  7. Leemos el archivo features.txt que contiene las variables en dt, mediciones para la media y la desviación stándar. Ponemos a sus columnas los nombres "featureNum" y "featureName"
+
+  8. Extraemos el subconjunto en los que aparece  mean() o std() en la variable "featureName". Esto se hace con ayuda de lo estudiado en la semana 4 mediante la linea de código dtFeatures <- dtFeatures[grepl("mean\\(\\)|std\\(\\)", featureName)]. Es importante resaltar que se debe escribir "\\(\\)" para que los símbolos de paréntesis abierto ("(") y cerrado (")") sean interpretados como tales y no com metacaracteres.
+
+  9. Añadimos una nueva columna dtFeatures$featureCode que contiene los nombres de las varables (los números de la columna featureNum precedidos por una v) para poder utilizarlas en el código; esto lo hace la línea dtFeatures$featureCode <- dtFeatures[, paste0("V", featureNum)]. A continuación extraemos el subconjunto de las variables en cuestión ayudándonos del comando select.
+
+  10. Leemos el archivo activity_labels.txt que nos servirá para poner nombres descriptivos a las actividades. Ponemos a las columnas del data table correspondiente los nombres "activityNum" y "activityName".
+
+  11. Hacemos un merge con las etiquetas: dt <- merge(dt, dtActivityNames, by="activityNum", all.x=TRUE) y añadimos activityName como llave. A continuación hacemos un melt y un merge para poder dar al data.table una nueva forma más estrecha y alta.
+
+  12. Creamos el conjunto de datos ordenado dtTidy
